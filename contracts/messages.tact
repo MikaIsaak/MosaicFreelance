@@ -1,18 +1,15 @@
-message DealDetails {
-    id: Int as uint32;
+message CreateDeal {
+    id: String;
     amount: Int as coins;
     admin: Address;
     customer: Address;
     freelancer: Address;
 }
-message AddAdditionalValue {
-    amount: Int as coins;
-}
 message FinishDeal {
-    dealId: Int as uint32;
+    id: String;
 }
 message AdminForceEnd {
-    dealId: Int as uint32;
+    id: String;
     receiver: Address;
 }
 message Deposit {

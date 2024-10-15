@@ -2,7 +2,7 @@ import "@stdlib/deploy";
 import "./messages";
 
 contract MosaicDealContract with Deployable {
-    dealId: Int; // Unique identifier for the deal
+    id: String; // Unique identifier for the deal
     amount: Int as coins; // Total value of the deal in TON
     admin: Address; // Administrator's address who manages the deal
     customer: Address; // Customer's address who created the deal
@@ -18,15 +18,15 @@ contract MosaicDealContract with Deployable {
     @param customer The address of the customer who created the deal.
     @param freelancer The address of the freelancer performing the job in the deal.
     **/
-    init(dealId: Int, amount: Int, admin: Address, customer: Address, freelancer: Address){
-        // require(admin != newAddress(0, 0), "Incorrect admin address"); // Check if the admin address is valid
-        // require(customer != newAddress(0, 0), "Incorrect customer address"); // Check if the customer address is valid
-        // require(freelancer != newAddress(0, 0), "Incorrect freelancer address"); // Check if the freelancer address is valid
-        // require(amount != 0, "Incorrect amount"); // Ensure that the amount is not zero
+    init(id: String, amount: Int, admin: Address, customer: Address, freelancer: Address){
+        require(admin != newAddress(0, 0), "Incorrect admin address"); // Check if the admin address is valid
+        require(customer != newAddress(0, 0), "Incorrect customer address"); // Check if the customer address is valid
+        require(freelancer != newAddress(0, 0), "Incorrect freelancer address"); // Check if the freelancer address is valid
+        require(amount != 0, "Incorrect amount"); // Ensure that the amount is not zero
 
-        self.dealId = dealId; // Set the deal ID
-        self.admin = admin; // Set the administrator's address
+        self.id = id; // Set the deal ID
         self.amount = amount; // Set the deal amount
+        self.admin = admin; // Set the administrator's address
         self.customer = customer; // Set the customer's address
         self.freelancer = freelancer; // Set the freelancer's address
         self.isActive = false; // Mark the deal as inactive initially
@@ -37,10 +37,10 @@ contract MosaicDealContract with Deployable {
     @dev Handles deposits from the customer and activates the deal if the conditions are met.
     **/
     receive(msg: Deposit){
-        // require(context().sender == self.customer, "Incorrect sender"); // Ensure the sender is the customer
-        // require(self.isActive == false, "Deal is already active"); // Ensure the deal isn't already active
-        // require(self.isFinished == false, "Deal is already finished"); // Ensure the deal isn't already finished
-        // require(context().value >= self.amount, "Incorrect value of deal"); // Ensure the deposit matches or exceeds the deal value
+        require(context().sender == self.customer, "Incorrect sender"); // Ensure the sender is the customer
+        require(self.isActive == false, "Deal is already active"); // Ensure the deal isn't already active
+        require(self.isFinished == false, "Deal is already finished"); // Ensure the deal isn't already finished
+        require(context().value >= self.amount, "Incorrect value of deal"); // Ensure the deposit matches or exceeds the deal value
 
         self.isActive = true; // Mark the deal as active
     }
@@ -51,7 +51,7 @@ contract MosaicDealContract with Deployable {
     **/
     receive(msg: FinishDeal){
         require(context().sender == self.customer, "Incorrect sender"); // Ensure the sender is the customer
-        require(msg.dealId == self.dealId, "Incorrect deal Id"); // Check if the deal ID is valid
+        require(msg.id == self.id, "Incorrect deal Id"); // Check if the deal ID is valid
         require(self.isActive == true, "Deal isn't active"); // Ensure the deal is active
 
         self.isActive = false; // Mark the deal as inactive
@@ -65,7 +65,7 @@ contract MosaicDealContract with Deployable {
     @param msg The message containing the deal information and the receiver address.
     **/
     receive(msg: AdminForceEnd){
-        require(self.dealId == msg.dealId, "Incorrect deal Id"); // Ensure the deal ID matches
+        require(self.id == msg.id, "Incorrect deal Id"); // Ensure the deal ID matches
         require(context().sender == self.admin, "Non-admin address can't finish this deal"); // Check if the sender is the admin
         require(msg.receiver == self.customer || msg.receiver == self.freelancer, "Incorrect receiver address"); // Validate the receiver address
         require(self.isActive == true, "Deal isn't active"); // Ensure the deal is active
@@ -80,8 +80,8 @@ contract MosaicDealContract with Deployable {
     @return The deal ID.
     **/
 
-    get fun dealId(): Int {
-        return self.dealId;
+    get fun id(): String {
+        return self.id;
     }
 
     /**
