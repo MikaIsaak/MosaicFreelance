@@ -15,8 +15,8 @@ export async function run(provider: NetworkProvider) {
             await MosaicDealContract.fromInit(
                 '4',
                 toNano('0.15'),
-                Address.parse('EQC45pmsJGhG3v0W9JkFi4iwL_H_OKNdA6b0soXuIyNg0KtD'),
-                Address.parse('EQC45pmsJGhG3v0W9JkFi4iwL_H_OKNdA6b0soXuIyNg0KtD'),
+                Address.parse('UQC45pmsJGhG3v0W9JkFi4iwL_H_OKNdA6b0soXuIyNg0PaG'),
+                Address.parse('UQC45pmsJGhG3v0W9JkFi4iwL_H_OKNdA6b0soXuIyNg0PaG'),
                 Address.parse('UQAuvsxxbG7SAFytUaS7ZXjJ90OBX8A9b9ZFc28nfQxjDz-D'),
             )
         ).address,
@@ -27,8 +27,8 @@ export async function run(provider: NetworkProvider) {
         await MosaicDealContract.fromInit(
             '4',
             toNano('0.15'),
-            Address.parse('EQC45pmsJGhG3v0W9JkFi4iwL_H_OKNdA6b0soXuIyNg0KtD'),
-            Address.parse('EQC45pmsJGhG3v0W9JkFi4iwL_H_OKNdA6b0soXuIyNg0KtD'),
+            Address.parse('UQC45pmsJGhG3v0W9JkFi4iwL_H_OKNdA6b0soXuIyNg0PaG'),
+            Address.parse('UQC45pmsJGhG3v0W9JkFi4iwL_H_OKNdA6b0soXuIyNg0PaG'),
             Address.parse('UQAuvsxxbG7SAFytUaS7ZXjJ90OBX8A9b9ZFc28nfQxjDz-D'),
         ),
     );
@@ -57,8 +57,8 @@ export async function run(provider: NetworkProvider) {
             $$type: 'CreateDeal',
             id: '4',
             amount: toNano('0.15'),
-            customer: Address.parse('EQC45pmsJGhG3v0W9JkFi4iwL_H_OKNdA6b0soXuIyNg0KtD'),
-            admin: Address.parse('EQC45pmsJGhG3v0W9JkFi4iwL_H_OKNdA6b0soXuIyNg0KtD'),
+            customer: Address.parse('UQC45pmsJGhG3v0W9JkFi4iwL_H_OKNdA6b0soXuIyNg0PaG'),
+            admin: Address.parse('UQC45pmsJGhG3v0W9JkFi4iwL_H_OKNdA6b0soXuIyNg0PaG'),
             freelancer: Address.parse('UQAuvsxxbG7SAFytUaS7ZXjJ90OBX8A9b9ZFc28nfQxjDz-D'),
         },
     );
@@ -70,30 +70,28 @@ export async function run(provider: NetworkProvider) {
             $$type: 'CreateDeal',
             id: '4',
             amount: toNano('0.15'),
-            customer: Address.parse('EQC45pmsJGhG3v0W9JkFi4iwL_H_OKNdA6b0soXuIyNg0KtD'),
-            admin: Address.parse('EQC45pmsJGhG3v0W9JkFi4iwL_H_OKNdA6b0soXuIyNg0KtD'),
+            customer: Address.parse('UQC45pmsJGhG3v0W9JkFi4iwL_H_OKNdA6b0soXuIyNg0PaG'),
+            admin: Address.parse('UQC45pmsJGhG3v0W9JkFi4iwL_H_OKNdA6b0soXuIyNg0PaG'),
             freelancer: Address.parse('UQAuvsxxbG7SAFytUaS7ZXjJ90OBX8A9b9ZFc28nfQxjDz-D'),
         }),
     );
 
     await new Promise((resolve) => setTimeout(resolve, 20000));
 
-    console.log(await mosaicDealContract.getFreelancer());
+    await mosaicDealContract.send(
+        provider.sender(),
+        {
+            value: toNano('0.2'),
+        },
+        {
+            $$type: 'Deposit',
+            amount: toNano('0.2'),
+        },
+    );
 
-    // await mosaicDealContract.send(
-    //     provider.sender(),
-    //     {
-    //         value: toNano('0.06'),
-    //     },
-    //     {
-    //         $$type: 'Deposit',
-    //         amount: toNano('0.06'),
-    //     },
-    // );
+    await new Promise((resolve) => setTimeout(resolve, 20000));
 
-    // await new Promise((resolve) => setTimeout(resolve, 20000));
-
-    // console.log(await mosaicDealContract.getAdmin());
-    // console.log(await mosaicDealContract.getId());
-    // console.log(await mosaicDealContract.getIsActive());
+    console.log(await mosaicDealContract.getAdmin());
+    console.log(await mosaicDealContract.getId());
+    console.log(await mosaicDealContract.getIsActive());
 }
